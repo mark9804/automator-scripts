@@ -12,5 +12,5 @@
 | Resize Finder Window                  | 设置Finder窗口大小（最小化/普通）   |                                                              |
 | Move File to InboxX                   | 移动文件到指定的桌面文件夹          | ![我的桌面文件夹](https://github.com/Mark9804/automator-scripts/raw/master/images/inboxes.png) |
 | Star or Unstar                        | 利用label给Finder添加“星标”功能     |                                                              |
-| Add Tag to file(Under Construction)   | 给选中的Finder项目添加Tag           | 还在研究如何检测tag状态以便移除tag                           |
+| Add Tag to file(Under Construction)   | 给选中的Finder项目添加Tag           | 已经能够获取文件tag状态，但还在研究如何移除tag               |
 
