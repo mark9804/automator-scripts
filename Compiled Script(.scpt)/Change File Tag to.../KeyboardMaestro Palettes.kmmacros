@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Activate</key>
+		<string>OnceWithPalette</string>
+		<key>AddToMacroPalette</key>
+		<false/>
+		<key>AddToStatusMenu</key>
+		<false/>
+		<key>CreationDate</key>
+		<real>607948899.48574698</real>
+		<key>KeyCode</key>
+		<integer>17</integer>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayToggle</key>
+						<true/>
+						<key>MacroActionType</key>
+						<string>MacroGroupToggle</string>
+						<key>MacroGroupUID</key>
+						<string>50F2D97B-F455-490E-842D-000DD84C50CE</string>
+						<key>ToggleMode</key>
+						<string>Once</string>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Enable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>50F2D97B-F455-490E-842D-000DD84C50CE</string>
+					</dict>
+					<dict>
+						<key>DisplayToggle</key>
+						<true/>
+						<key>MacroActionType</key>
+						<string>MacroGroupToggle</string>
+						<key>MacroGroupUID</key>
+						<string>50F2D97B-F455-490E-842D-000DD84C50CE</string>
+						<key>ToggleMode</key>
+						<string>OnceWithPalette</string>
+					</dict>
+					<dict>
+						<key>MacroActionType</key>
+						<string>Pause</string>
+						<key>Time</key>
+						<string>1.5</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Disable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>50F2D97B-F455-490E-842D-000DD84C50CE</string>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608206892.15357196</real>
+				<key>ModificationDate</key>
+				<real>608207206.89971399</real>
+				<key>Name</key>
+				<string>Enable VC SubGroup</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>9</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>E7726038-2229-4B68-96AE-6A1A767786DD</string>
+			</dict>
+		</array>
+		<key>Modifiers</key>
+		<integer>768</integer>
+		<key>Name</key>
+		<string>Pre-Finder Tagging Service</string>
+		<key>PaletteUnderMouse</key>
+		<false/>
+		<key>Targeting</key>
+		<dict>
+			<key>Targeting</key>
+			<string>Included</string>
+			<key>TargetingApps</key>
+			<array>
+				<dict>
+					<key>BundleIdentifier</key>
+					<string>com.apple.finder</string>
+					<key>Name</key>
+					<string>Finder</string>
+					<key>NewFile</key>
+					<string>/System/Library/CoreServices/Finder.app</string>
+				</dict>
+			</array>
+		</dict>
+		<key>ToggleMacroUID</key>
+		<string>0ADA1FEB-3839-48AD-ADC2-001FAA3247D0</string>
+		<key>UID</key>
+		<string>7C40C711-214E-4622-9F51-7B4E3A2924B5</string>
+	</dict>
+	<dict>
+		<key>Activate</key>
+		<string>Normal</string>
+		<key>CreationDate</key>
+		<real>608206274.33101201</real>
+		<key>IsActive</key>
+		<false/>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayKind</key>
+						<string>None</string>
+						<key>HonourFailureSettings</key>
+						<true/>
+						<key>IncludeStdErr</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteAppleScript</string>
+						<key>Path</key>
+						<string></string>
+						<key>Text</key>
+						<string>use framework "Foundation"
+use AppleScript version "2.4" -- Yosemite or later
+use scripting additions
+
+property tagname : "Progressing"
+
+property NSArray : a reference to current application's NSArray
+property |NSURL| : a reference to current application's |NSURL|
+property NSURLTagNamesKey : a reference to current application's NSURLTagNamesKey
+set tagIsAppended to false
+
+tell application "Finder"
+	repeat with f in selection as alias list
+		set theFile to POSIX path of f
+		set tagsList to (my returnTagsFor:theFile)
+		repeat with tagNumber from 1 to the length of tagsList
+			set tagAppended to item tagNumber of tagsList
+			if tagAppended is equal to tagname then
+				set tagIsAppended to true
+			end if
+		end repeat
+		if tagIsAppended is not true then
+			-- Apply tag to selected Finder item
+			set tagArray to (NSArray's arrayWithObject:tagname)
+			set fileURL to (|NSURL|'s fileURLWithPath:(POSIX path of f))
+			(fileURL's setResourceValue:tagArray forKey:(NSURLTagNamesKey) |error|:(missing value))
+		else if tagIsAppended then
+			return "Tag has already been appended" -- Researching way(s) to remove appended tag...
+		end if
+	end repeat
+end tell
+
+
+on returnTagsFor:posixPath -- get the tags
+	set aURL to current application's |NSURL|'s fileURLWithPath:posixPath -- make URL
+	set {theResult, theTags} to aURL's getResourceValue:(reference) forKey:(current application's NSURLTagNamesKey) |error|:(missing value)
+	if theTags = missing value then return {} -- because when there are none, it returns missing value
+	return theTags as list
+end returnTagsFor:
+</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+						<key>TrimResults</key>
+						<true/>
+						<key>TrimResultsNew</key>
+						<true/>
+						<key>UseText</key>
+						<true/>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608206326.02133906</real>
+				<key>ModificationDate</key>
+				<real>608206502.69372296</real>
+				<key>Name</key>
+				<string>Tag File(s) to Progressing</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>5</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>0647A76F-BA5A-4055-A282-82FD36306066</string>
+			</dict>
+		</array>
+		<key>Name</key>
+		<string>Finder Tagging Service(PD+PG)</string>
+		<key>ToggleMacroUID</key>
+		<string>9296B2FB-B96F-4E1E-A2FA-6101C8E48D37</string>
+		<key>UID</key>
+		<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+	</dict>
+	<dict>
+		<key>Activate</key>
+		<string>OnceWithPalette</string>
+		<key>AddToMacroPalette</key>
+		<false/>
+		<key>AddToStatusMenu</key>
+		<false/>
+		<key>CreationDate</key>
+		<real>607948899.48574698</real>
+		<key>KeyCode</key>
+		<integer>17</integer>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayKind</key>
+						<string>None</string>
+						<key>HonourFailureSettings</key>
+						<true/>
+						<key>IncludeStdErr</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteAppleScript</string>
+						<key>Path</key>
+						<string></string>
+						<key>Text</key>
+						<string>use framework "Foundation"
+use AppleScript version "2.4" -- Yosemite or later
+use scripting additions
+
+property tagname : "Done"
+
+property NSArray : a reference to current application's NSArray
+property |NSURL| : a reference to current application's |NSURL|
+property NSURLTagNamesKey : a reference to current application's NSURLTagNamesKey
+set tagIsAppended to false
+
+tell application "Finder"
+	repeat with f in selection as alias list
+		set theFile to POSIX path of f
+		set tagsList to (my returnTagsFor:theFile)
+		repeat with tagNumber from 1 to the length of tagsList
+			set tagAppended to item tagNumber of tagsList
+			if tagAppended is equal to tagname then
+				set tagIsAppended to true
+			end if
+		end repeat
+		if tagIsAppended is not true then
+			-- Apply tag to selected Finder item
+			set tagArray to (NSArray's arrayWithObject:tagname)
+			set fileURL to (|NSURL|'s fileURLWithPath:(POSIX path of f))
+			(fileURL's setResourceValue:tagArray forKey:(NSURLTagNamesKey) |error|:(missing value))
+		else if tagIsAppended then
+			return "Tag has already been appended" -- Researching way(s) to remove appended tag...
+		end if
+	end repeat
+end tell
+
+
+on returnTagsFor:posixPath -- get the tags
+	set aURL to current application's |NSURL|'s fileURLWithPath:posixPath -- make URL
+	set {theResult, theTags} to aURL's getResourceValue:(reference) forKey:(current application's NSURLTagNamesKey) |error|:(missing value)
+	if theTags = missing value then return {} -- because when there are none, it returns missing value
+	return theTags as list
+end returnTagsFor:
+</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+						<key>TrimResults</key>
+						<true/>
+						<key>TrimResultsNew</key>
+						<true/>
+						<key>UseText</key>
+						<true/>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608206553.94318402</real>
+				<key>ModificationDate</key>
+				<real>608207001.91546702</real>
+				<key>Name</key>
+				<string>Tag File(s) to Done</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>2</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>E040C101-BF85-4C36-B543-BB88CD029C65</string>
+			</dict>
+		</array>
+		<key>Modifiers</key>
+		<integer>768</integer>
+		<key>Name</key>
+		<string>Pre-Finder Tagging Service</string>
+		<key>PaletteUnderMouse</key>
+		<false/>
+		<key>Targeting</key>
+		<dict>
+			<key>Targeting</key>
+			<string>Included</string>
+			<key>TargetingApps</key>
+			<array>
+				<dict>
+					<key>BundleIdentifier</key>
+					<string>com.apple.finder</string>
+					<key>Name</key>
+					<string>Finder</string>
+					<key>NewFile</key>
+					<string>/System/Library/CoreServices/Finder.app</string>
+				</dict>
+			</array>
+		</dict>
+		<key>ToggleMacroUID</key>
+		<string>0ADA1FEB-3839-48AD-ADC2-001FAA3247D0</string>
+		<key>UID</key>
+		<string>7C40C711-214E-4622-9F51-7B4E3A2924B5</string>
+	</dict>
+	<dict>
+		<key>Activate</key>
+		<string>OnceWithPalette</string>
+		<key>AddToMacroPalette</key>
+		<false/>
+		<key>AddToStatusMenu</key>
+		<false/>
+		<key>CreationDate</key>
+		<real>607948899.48574698</real>
+		<key>KeyCode</key>
+		<integer>17</integer>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayToggle</key>
+						<true/>
+						<key>MacroActionType</key>
+						<string>MacroGroupToggle</string>
+						<key>MacroGroupUID</key>
+						<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+						<key>ToggleMode</key>
+						<string>Once</string>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Disable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>E040C101-BF85-4C36-B543-BB88CD029C65</string>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Enable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+					</dict>
+					<dict>
+						<key>DisplayToggle</key>
+						<true/>
+						<key>MacroActionType</key>
+						<string>MacroGroupToggle</string>
+						<key>MacroGroupUID</key>
+						<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+						<key>ToggleMode</key>
+						<string>OnceWithPalette</string>
+					</dict>
+					<dict>
+						<key>MacroActionType</key>
+						<string>Pause</string>
+						<key>Time</key>
+						<string>1.5</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Disable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+					</dict>
+					<dict>
+						<key>Action</key>
+						<string>Enable</string>
+						<key>MacroActionType</key>
+						<string>SetMacroEnable</string>
+						<key>MacroUID</key>
+						<string>E040C101-BF85-4C36-B543-BB88CD029C65</string>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608206358.82602596</real>
+				<key>ModificationDate</key>
+				<real>608207157.70497</real>
+				<key>Name</key>
+				<string>Enable P SubGroup</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>35</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>046F960B-9B1C-4667-838D-0E40A9D552FC</string>
+			</dict>
+		</array>
+		<key>Modifiers</key>
+		<integer>768</integer>
+		<key>Name</key>
+		<string>Pre-Finder Tagging Service</string>
+		<key>PaletteUnderMouse</key>
+		<false/>
+		<key>Targeting</key>
+		<dict>
+			<key>Targeting</key>
+			<string>Included</string>
+			<key>TargetingApps</key>
+			<array>
+				<dict>
+					<key>BundleIdentifier</key>
+					<string>com.apple.finder</string>
+					<key>Name</key>
+					<string>Finder</string>
+					<key>NewFile</key>
+					<string>/System/Library/CoreServices/Finder.app</string>
+				</dict>
+			</array>
+		</dict>
+		<key>ToggleMacroUID</key>
+		<string>0ADA1FEB-3839-48AD-ADC2-001FAA3247D0</string>
+		<key>UID</key>
+		<string>7C40C711-214E-4622-9F51-7B4E3A2924B5</string>
+	</dict>
+	<dict>
+		<key>Activate</key>
+		<string>Normal</string>
+		<key>CreationDate</key>
+		<real>608206459.25517797</real>
+		<key>IsActive</key>
+		<false/>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayKind</key>
+						<string>None</string>
+						<key>HonourFailureSettings</key>
+						<true/>
+						<key>IncludeStdErr</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteAppleScript</string>
+						<key>Path</key>
+						<string></string>
+						<key>Text</key>
+						<string>use framework "Foundation"
+use AppleScript version "2.4" -- Yosemite or later
+use scripting additions
+
+property tagname : "VersionControl"
+
+property NSArray : a reference to current application's NSArray
+property |NSURL| : a reference to current application's |NSURL|
+property NSURLTagNamesKey : a reference to current application's NSURLTagNamesKey
+set tagIsAppended to false
+
+tell application "Finder"
+	repeat with f in selection as alias list
+		set theFile to POSIX path of f
+		set tagsList to (my returnTagsFor:theFile)
+		repeat with tagNumber from 1 to the length of tagsList
+			set tagAppended to item tagNumber of tagsList
+			if tagAppended is equal to tagname then
+				set tagIsAppended to true
+			end if
+		end repeat
+		if tagIsAppended is not true then
+			-- Apply tag to selected Finder item
+			set tagArray to (NSArray's arrayWithObject:tagname)
+			set fileURL to (|NSURL|'s fileURLWithPath:(POSIX path of f))
+			(fileURL's setResourceValue:tagArray forKey:(NSURLTagNamesKey) |error|:(missing value))
+		else if tagIsAppended then
+			return "Tag has already been appended" -- Researching way(s) to remove appended tag...
+		end if
+	end repeat
+end tell
+
+
+on returnTagsFor:posixPath -- get the tags
+	set aURL to current application's |NSURL|'s fileURLWithPath:posixPath -- make URL
+	set {theResult, theTags} to aURL's getResourceValue:(reference) forKey:(current application's NSURLTagNamesKey) |error|:(missing value)
+	if theTags = missing value then return {} -- because when there are none, it returns missing value
+	return theTags as list
+end returnTagsFor:
+</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+						<key>TrimResults</key>
+						<true/>
+						<key>TrimResultsNew</key>
+						<true/>
+						<key>UseText</key>
+						<true/>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608206459.25519097</real>
+				<key>ModificationDate</key>
+				<real>608206531.96721196</real>
+				<key>Name</key>
+				<string>Tag File(s) to VersionControl</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>8</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>BB50A6E8-5C2D-48F9-99CE-B6850922C64F</string>
+			</dict>
+		</array>
+		<key>Name</key>
+		<string>Finder Tagging Service(VC)</string>
+		<key>ToggleMacroUID</key>
+		<string>0728C1B3-72D7-4833-BC42-3DC9775BABD5</string>
+		<key>UID</key>
+		<string>50F2D97B-F455-490E-842D-000DD84C50CE</string>
+	</dict>
+	<dict>
+		<key>Activate</key>
+		<string>Normal</string>
+		<key>CreationDate</key>
+		<real>608206274.33101201</real>
+		<key>IsActive</key>
+		<false/>
+		<key>Macros</key>
+		<array>
+			<dict>
+				<key>Actions</key>
+				<array>
+					<dict>
+						<key>DisplayKind</key>
+						<string>None</string>
+						<key>HonourFailureSettings</key>
+						<true/>
+						<key>IncludeStdErr</key>
+						<false/>
+						<key>MacroActionType</key>
+						<string>ExecuteAppleScript</string>
+						<key>Path</key>
+						<string></string>
+						<key>Text</key>
+						<string>use framework "Foundation"use AppleScript version "2.4" -- Yosemite or lateruse scripting additionsproperty tagname : "Pending"property NSArray : a reference to current application's NSArrayproperty |NSURL| : a reference to current application's |NSURL|property NSURLTagNamesKey : a reference to current application's NSURLTagNamesKeyset tagIsAppended to falsetell application "Finder"	repeat with f in selection as alias list		set theFile to POSIX path of f		set tagsList to (my returnTagsFor:theFile)		repeat with tagNumber from 1 to the length of tagsList			set tagAppended to item tagNumber of tagsList			if tagAppended is equal to tagname then				set tagIsAppended to true			end if		end repeat		if tagIsAppended is not true then			-- Apply tag to selected Finder item			set tagArray to (NSArray's arrayWithObject:tagname)			set fileURL to (|NSURL|'s fileURLWithPath:(POSIX path of f))			(fileURL's setResourceValue:tagArray forKey:(NSURLTagNamesKey) |error|:(missing value))		else if tagIsAppended then			return "Tag has already been appended" -- Researching way(s) to remove appended tag...		end if	end repeatend tellon returnTagsFor:posixPath -- get the tags	set aURL to current application's |NSURL|'s fileURLWithPath:posixPath -- make URL	set {theResult, theTags} to aURL's getResourceValue:(reference) forKey:(current application's NSURLTagNamesKey) |error|:(missing value)	if theTags = missing value then return {} -- because when there are none, it returns missing value	return theTags as listend returnTagsFor:</string>
+						<key>TimeOutAbortsMacro</key>
+						<true/>
+						<key>TrimResults</key>
+						<true/>
+						<key>TrimResultsNew</key>
+						<true/>
+						<key>UseText</key>
+						<true/>
+					</dict>
+				</array>
+				<key>CreationDate</key>
+				<real>608135469.44123101</real>
+				<key>ModificationDate</key>
+				<real>608206317.42391598</real>
+				<key>Name</key>
+				<string>Tag File(s) to Pending</string>
+				<key>Triggers</key>
+				<array>
+					<dict>
+						<key>FireType</key>
+						<string>Pressed</string>
+						<key>KeyCode</key>
+						<integer>2</integer>
+						<key>MacroTriggerType</key>
+						<string>HotKey</string>
+						<key>Modifiers</key>
+						<integer>0</integer>
+					</dict>
+				</array>
+				<key>UID</key>
+				<string>492B3CB7-8AC8-4EC8-AF89-66C8039DCCEC</string>
+			</dict>
+		</array>
+		<key>Name</key>
+		<string>Finder Tagging Service(PD+PG)</string>
+		<key>ToggleMacroUID</key>
+		<string>9296B2FB-B96F-4E1E-A2FA-6101C8E48D37</string>
+		<key>UID</key>
+		<string>F0CF0A13-69EE-4E8D-BAB7-930D26A90B23</string>
+	</dict>
+</array>
+</plist>
