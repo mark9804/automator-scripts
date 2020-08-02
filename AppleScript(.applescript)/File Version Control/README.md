@@ -1,5 +1,7 @@
 # Create Version Control Duplicate
 
+[EN](https://github.com/Mark9804/automator-scripts/blob/master/AppleScript(.applescript)/File Version Control/README_en.md)
+
 ## 1. 功能
 
 将Finder中的已选中文件复制一份。在复制文件的文件名后打上当天的日期戳，并添加自定义的用户名（编辑者）。
