@@ -1,6 +1,6 @@
 # Create Version Control Duplicate
 
-[EN](https://github.com/Mark9804/automator-scripts/blob/master/AppleScript(.applescript)/File Version Control/README_en.md)
+[EN](https://github.com/Mark9804/automator-scripts/blob/master/AppleScript(.applescript)/File%20Version%20Control/README_en.md)
 
 ## 1. 功能
 
