@@ -3,15 +3,35 @@ use AppleScript version "2.4" -- Yosemite or later
 use scripting additions
 
 property tagname : "VersionControl"
-
+property yourName : "xxx" -- Replace xxx with your name.
 property NSArray : a reference to current application's NSArray
 property |NSURL| : a reference to current application's |NSURL|
 property NSURLTagNamesKey : a reference to current application's NSURLTagNamesKey
 set tagIsAppended to false
 
+set text item delimiters to "."
+
+-- set datestamp
+set dateObj to (current date)
+set theMonth to text -1 thru -2 of ("0" & (month of dateObj as number))
+set theDay to text -1 thru -2 of ("0" & day of dateObj)
+set theYear to year of dateObj
+set dateStamp to "" & theYear & theMonth & theDay
+
 tell application "Finder"
 	repeat with f in selection as alias list
 		set theFile to POSIX path of f
+		set ti to text items of theFile
+		if number of ti is 1 then
+			set theFile to "" & (item 1 of ti) & "_" & dateStamp & "_" & yourName & "." & item -1 of ti
+		else
+			set fileNameList to {}
+			repeat with segmentOrder from 1 to ((length of ti) - 1)
+				set fileNameList to fileNameList & item segmentOrder of ti
+			end repeat
+			set theFile to (fileNameList as text) & "_" & dateStamp & "_" & yourName & "." & item -1 of ti
+		end if
+		-- return theFile
 		set tagsList to (my returnTagsFor:theFile)
 		repeat with tagNumber from 1 to the length of tagsList
 			set tagAppended to item tagNumber of tagsList
@@ -19,7 +39,6 @@ tell application "Finder"
 				set tagIsAppended to true
 			end if
 		end repeat
-		return theFile
 		if tagIsAppended is not true then
 			-- Apply tag to selected Finder item
 			set tagArray to (NSArray's arrayWithObject:tagname)
@@ -30,7 +49,6 @@ tell application "Finder"
 		end if
 	end repeat
 end tell
-
 
 on returnTagsFor:posixPath -- get the tags
 	set aURL to current application's |NSURL|'s fileURLWithPath:posixPath -- make URL
