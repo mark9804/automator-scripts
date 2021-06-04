@@ -15,4 +15,5 @@
 | Change File Tag to...                 | 给选中的Finder项目添加Tag(Pending/Progressing/VersionControl/Done) | 如果文件已经有同名tag则不做动作。目前只能覆盖已有Tag，请小心使用 |
 | Save as PDF                           | 将选中的doc(x)和pages文档保存为PDF格式                       | 需要调用pages                                                |
 | File Version Control                  | 复制一份当前文档，在文件名中附加当前日期和修改者，并标注tag为版本控制 | 只有AppleScript，因为它死活不让我保存compiled script         |
+| Word Count                            | 显示剪贴板中当前的字符串长度                                 | Known Issue: 在输入字符串之外的输入时不会拒绝                |
 
